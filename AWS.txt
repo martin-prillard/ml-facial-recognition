@@ -1,0 +1,54 @@
+##################################################################################################################
+# LAUNCG EC2 INSTANCE                                                                                            #
+##################################################################################################################
+
+Amazon EC2
+Click launch "spot requests"
+click community AMI
+search "deep learning paris" -> chose deep learning Paris AMI
+Next
+Add 10 go Storage (total : 20)
+Name security group : MLA_GPU
+Add new port : type -> Custom TCP rule, port Range -> 8888, Source -> anywhere
+Create new key pair and download it : MLA_GPU_KEY
+Launch your instance !
+
+##################################################################################################################
+# CONNECTION                                                                                                     #
+##################################################################################################################
+
+SSH Connection :
+chmod 400 ~/MLA_Challenge/MLA_GPU_KEY.pem
+ssh -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com
+mkdir ~/MLA_AWS/
+mkdir ~/MLA_AWS/data/
+	
+iPython Notebook :
+http://ec2-52-8-197-135.us-west-1.compute.amazonaws.com:8888/tree/MLA_AWS
+
+##################################################################################################################
+# TRANSFERTS                                                                                                     #
+##################################################################################################################
+
+Transfert data :
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem /tsi/datachallenge/data_train_facile.mat    ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/data/data_train_facile.mat
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem /tsi/datachallenge/data_test_facile.mat     ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/data/data_test_facile.mat
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem /tsi/datachallenge/data_train_difficile.mat ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/data/data_train_difficile.mat
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem /tsi/datachallenge/data_test_difficile.mat  ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/data/data_test_difficile.mat
+
+Transfert sources :
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ~/MLA_Challenge/mlp_nn.py       ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/mlp_nn.py
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ~/MLA_Challenge/logistic_sgd.py ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/logistic_sgd.py
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ~/MLA_Challenge/oasis.py        ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/oasis.py
+
+# get Oasis matrix from EC2 instance
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/tmp/oasis_matrix.txt ~/MLA_Challenge/oasis_matrix_difficile_2000000.txt  
+# facile
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/tmp/oasis_test/model0008.pklz ~/MLA_Challenge/model0008_facile.pklz   
+# difficile
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/tmp/oasis_test/model0002.pklz ~/MLA_Challenge/model0002_difficile.pklz
+
+# get soumission file from EC2 instance
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/soumission_facile.txt ~/MLA_Challenge/soumission_facile.txt 
+scp -i ~/MLA_Challenge/MLA_GPU_KEY.pem ubuntu@ec2-52-8-197-135.us-west-1.compute.amazonaws.com:~/MLA_AWS/soumission_difficile.txt ~/MLA_Challenge/soumission_difficile.txt 
+
